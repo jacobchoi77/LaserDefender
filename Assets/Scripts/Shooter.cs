@@ -1,78 +1,60 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Shooter : MonoBehaviour
-{
-    [Header("General")]
-    [SerializeField] GameObject projectilePrefab;
-    [SerializeField] float projectileSpeed = 10f;
-    [SerializeField] float projectileLifetime = 5f;
-    [SerializeField] float baseFiringRate = 0.2f;
+public class Shooter : MonoBehaviour{
+    [Header("General")] [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private float projectileSpeed = 10f;
+    [SerializeField] private float projectileLifetime = 5f;
+    [SerializeField] private float baseFiringRate = 0.2f;
 
-    [Header("AI")]
-    [SerializeField] bool useAI;
-    [SerializeField] float firingRateVariance = 0f;
-    [SerializeField] float minimumFiringRate = 0.1f;
+    [Header("AI")] [SerializeField] private bool useAI;
+    [SerializeField] private float firingRateVariance;
+    [SerializeField] private float minimumFiringRate = 0.1f;
 
     [HideInInspector] public bool isFiring;
 
-    Coroutine firingCoroutine;
-    AudioPlayer audioPlayer;
+    private Coroutine _firingCoroutine;
+    private AudioPlayer _audioPlayer;
 
-    void Awake()
-    {
-        audioPlayer = FindObjectOfType<AudioPlayer>();
+    private void Awake(){
+        _audioPlayer = FindObjectOfType<AudioPlayer>();
     }
 
-    void Start()
-    {
-        if(useAI)
-        {
+    private void Start(){
+        if (useAI){
             isFiring = true;
         }
     }
 
-    void Update()
-    {
+    private void Update(){
         Fire();
     }
 
-    void Fire()
-    {
-        if (isFiring && firingCoroutine == null)
-        {
-            firingCoroutine = StartCoroutine(FireContinuously());
-        }
-        else if(!isFiring && firingCoroutine != null)
-        {
-            StopCoroutine(firingCoroutine);
-            firingCoroutine = null;
+    private void Fire(){
+        switch (isFiring){
+            case true when _firingCoroutine == null:
+                _firingCoroutine = StartCoroutine(FireContinuously());
+                break;
+            case false when _firingCoroutine != null:
+                StopCoroutine(_firingCoroutine);
+                _firingCoroutine = null;
+                break;
         }
     }
 
-    IEnumerator FireContinuously()
-    {
-        while(true)
-        {
-            GameObject instance = Instantiate(projectilePrefab, 
-                                            transform.position, 
-                                            Quaternion.identity);
-
-            Rigidbody2D rb = instance.GetComponent<Rigidbody2D>();
-            if(rb != null)
-            {
+    private IEnumerator FireContinuously(){
+        while (true){
+            var instance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            var rb = instance.GetComponent<Rigidbody2D>();
+            if (rb != null){
                 rb.velocity = transform.up * projectileSpeed;
             }
 
             Destroy(instance, projectileLifetime);
-
-            float timeToNextProjectile = Random.Range(baseFiringRate - firingRateVariance,
-                                            baseFiringRate + firingRateVariance);
+            var timeToNextProjectile =
+                Random.Range(baseFiringRate - firingRateVariance, baseFiringRate + firingRateVariance);
             timeToNextProjectile = Mathf.Clamp(timeToNextProjectile, minimumFiringRate, float.MaxValue);
-
-            audioPlayer.PlayShootingClip();
-
+            _audioPlayer.PlayShootingClip();
             yield return new WaitForSeconds(timeToNextProjectile);
         }
     }

@@ -1,46 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreKeeper : MonoBehaviour
-{
-    int score;
+public class ScoreKeeper : MonoBehaviour{
+    private int _score;
 
-    static ScoreKeeper instance;
+    private static ScoreKeeper _instance;
 
-    void Awake()
-    {
+    private void Awake(){
         ManageSingleton();
     }
 
-    void ManageSingleton()
-    {
-        if(instance != null)
-        {
+    private void ManageSingleton(){
+        if (_instance != null){
             gameObject.SetActive(false);
             Destroy(gameObject);
         }
-        else
-        {
-            instance = this;
+        else{
+            _instance = this;
             DontDestroyOnLoad(gameObject);
         }
     }
 
-    public int GetScore()
-    {
-        return score;
+    public int GetScore(){
+        return _score;
     }
 
-    public void ModifyScore(int value)
-    {
-        score += value;
-        Mathf.Clamp(score, 0, int.MaxValue);
-        Debug.Log(score);
+    public void ModifyScore(int value){
+        _score += value;
+        _score = Mathf.Clamp(_score, 0, int.MaxValue);
+        Debug.Log(_score);
     }
 
-    public void ResetScore()
-    {
-        score = 0;
+    public void ResetScore(){
+        _score = 0;
     }
 }

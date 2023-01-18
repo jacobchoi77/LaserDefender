@@ -1,32 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class UIDisplay : MonoBehaviour
-{
-    [Header("Health")]
-    [SerializeField] Slider healthSlider;
-    [SerializeField] Health playerHealth;
+public class UIDisplay : MonoBehaviour{
+    [Header("Health")] [SerializeField] private Slider healthSlider;
+    [SerializeField] private Health playerHealth;
 
-    [Header("Score")]
-    [SerializeField] TextMeshProUGUI scoreText;
-    ScoreKeeper scoreKeeper;
+    [Header("Score")] [SerializeField] private TextMeshProUGUI scoreText;
 
-    void Awake()
-    {
-        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+    private ScoreKeeper _scoreKeeper;
+
+    private void Awake(){
+        _scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
-    void Start()
-    {
+    private void Start(){
         healthSlider.maxValue = playerHealth.GetHealth();
     }
 
-    void Update()
-    {
+    private void Update(){
         healthSlider.value = playerHealth.GetHealth();
-        scoreText.text = scoreKeeper.GetScore().ToString("000000000");
+        scoreText.text = _scoreKeeper.GetScore().ToString("000000000");
     }
 }

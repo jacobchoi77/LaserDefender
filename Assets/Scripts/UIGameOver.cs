@@ -1,20 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class UIGameOver : MonoBehaviour
-{
-    [SerializeField] TextMeshProUGUI scoreText;
-    ScoreKeeper scoreKeeper;
+public class UIGameOver : MonoBehaviour{
+    [SerializeField] private TextMeshProUGUI scoreText;
+    private ScoreKeeper _scoreKeeper;
 
-    void Awake()
-    {
-        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+    private void Awake(){
+        _scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
-    void Start()
-    {
-        scoreText.text = "You Scored:\n" + scoreKeeper.GetScore();
+    private void Start(){
+        scoreText.text = "You Scored:\n" + _scoreKeeper.GetScore();
     }
 }

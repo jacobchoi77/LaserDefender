@@ -1,34 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraShake : MonoBehaviour
-{
-    [SerializeField] float shakeDuration = 1f;
-    [SerializeField] float shakeMagnitude = 0.5f;
+public class CameraShake : MonoBehaviour{
+    [SerializeField] private float shakeDuration = 1f;
+    [SerializeField] private float shakeMagnitude = 0.5f;
 
-    Vector3 initialPosition;
+    private Vector3 _initialPosition;
 
-    void Start()
-    {
-        initialPosition = transform.position;
+    private void Start(){
+        _initialPosition = transform.position;
     }
 
-    public void Play()
-    {
+    public void Play(){
         StartCoroutine(Shake());
     }
 
-    IEnumerator Shake()
-    {
+    private IEnumerator Shake(){
         float elapsedTime = 0;
-        while(elapsedTime < shakeDuration)
-        {
-            transform.position = initialPosition + (Vector3)Random.insideUnitCircle * shakeMagnitude;
+        while (elapsedTime < shakeDuration){
+            transform.position = _initialPosition + (Vector3)Random.insideUnitCircle * shakeMagnitude;
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        transform.position = initialPosition;
-    }
 
+        transform.position = _initialPosition;
+    }
 }

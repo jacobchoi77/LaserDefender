@@ -1,42 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
-{
-    [SerializeField] float sceneLoadDelay = 2f;
-    ScoreKeeper scoreKeeper;
+public class LevelManager : MonoBehaviour{
+    [SerializeField] private float sceneLoadDelay = 2f;
+    private ScoreKeeper _scoreKeeper;
 
-    void Awake()
-    {
-        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+    private void Awake(){
+        _scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
-    public void LoadGame()
-    {
-        scoreKeeper.ResetScore();
+    public void LoadGame(){
+        _scoreKeeper.ResetScore();
         SceneManager.LoadScene("Game");
     }
 
-    public void LoadMainMenu()
-    {
+    public void LoadMainMenu(){
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void LoadGameOver()
-    {
+    public void LoadGameOver(){
         StartCoroutine(WaitAndLoad("GameOver", sceneLoadDelay));
     }
 
-    public void QuitGame()
-    {
+    public void QuitGame(){
         Debug.Log("Quitting Game...");
         Application.Quit();
     }
 
-    IEnumerator WaitAndLoad(string sceneName, float delay)
-    {
+    private IEnumerator WaitAndLoad(string sceneName, float delay){
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(sceneName);
     }

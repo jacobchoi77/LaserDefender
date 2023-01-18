@@ -1,64 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
-{
-    [SerializeField] float moveSpeed = 5f;
-    Vector2 rawInput;
+public class Player : MonoBehaviour{
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float paddingLeft;
+    [SerializeField] private float paddingRight;
+    [SerializeField] private float paddingTop;
+    [SerializeField] private float paddingBottom;
 
-    [SerializeField] float paddingLeft;
-    [SerializeField] float paddingRight;
-    [SerializeField] float paddingTop;
-    [SerializeField] float paddingBottom;
-    
-    Vector2 minBounds;
-    Vector2 maxBounds;
+    private Vector2 _rawInput;
+    private Vector2 _minBounds;
+    private Vector2 _maxBounds;
+    private Shooter _shooter;
 
-    Shooter shooter;
-
-    void Awake()
-    {
-        shooter = GetComponent<Shooter>();
+    private void Awake(){
+        _shooter = GetComponent<Shooter>();
     }
 
-    void Start()
-    {
+    private void Start(){
         InitBounds();
     }
 
-    void Update()
-    {
+    private void Update(){
         Move();
     }
 
-    void InitBounds()
-    {
-        Camera mainCamera = Camera.main;
-        minBounds = mainCamera.ViewportToWorldPoint(new Vector2(0,0));
-        maxBounds = mainCamera.ViewportToWorldPoint(new Vector2(1,1));
+    private void InitBounds(){
+        var mainCamera = Camera.main;
+        _minBounds = mainCamera.ViewportToWorldPoint(new Vector2(0, 0));
+        _maxBounds = mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
     }
 
-    void Move()
-    {
-        Vector2 delta = rawInput * moveSpeed * Time.deltaTime;
-        Vector2 newPos = new Vector2();
-        newPos.x = Mathf.Clamp(transform.position.x + delta.x, minBounds.x + paddingLeft, maxBounds.x - paddingRight);
-        newPos.y = Mathf.Clamp(transform.position.y + delta.y, minBounds.y + paddingBottom, maxBounds.y - paddingTop);
+    private void Move(){
+        var delta = _rawInput * (moveSpeed * Time.deltaTime);
+        var newPos = new Vector2{
+            x = Mathf.Clamp(transform.position.x + delta.x, _minBounds.x + paddingLeft, _maxBounds.x - paddingRight),
+            y = Mathf.Clamp(transform.position.y + delta.y, _minBounds.y + paddingBottom, _maxBounds.y - paddingTop)
+        };
         transform.position = newPos;
     }
 
-    void OnMove(InputValue value)
-    {
-        rawInput = value.Get<Vector2>();
+    private void OnMove(InputValue value){
+        _rawInput = value.Get<Vector2>();
     }
 
-    void OnFire(InputValue value)
-    {
-        if(shooter != null)
-        {
-            shooter.isFiring = value.isPressed;
-        }
+    private void OnFire(InputValue value){
+        if (_shooter == null) return;
+        _shooter.isFiring = value.isPressed;
     }
 }

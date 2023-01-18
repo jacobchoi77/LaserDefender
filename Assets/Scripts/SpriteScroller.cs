@@ -1,22 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SpriteScroller : MonoBehaviour
-{
-    [SerializeField] Vector2 moveSpeed;
+public class SpriteScroller : MonoBehaviour{
+    [SerializeField] private Vector2 moveSpeed;
 
-    Vector2 offset;
-    Material material;
+    private Vector2 _offset;
+    private Material _material;
 
-    void Awake()
-    {
-        material = GetComponent<SpriteRenderer>().material;
+    private void Awake(){
+        _material = GetComponent<SpriteRenderer>().material;
     }
 
-    void Update()
-    {
-        offset = moveSpeed * Time.deltaTime;
-        material.mainTextureOffset += offset;
+    private void Update(){
+        _offset = moveSpeed * Time.deltaTime;
+        _material.mainTextureOffset += _offset;
     }
 }

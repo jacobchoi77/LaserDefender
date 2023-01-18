@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageDealer : MonoBehaviour
-{
-    [SerializeField] int damage = 10;
+public class DamageDealer : MonoBehaviour{
+    [SerializeField] private int damage = 10;
 
-    public int GetDamage()
-    {
+    public int GetDamage(){
         return damage;
     }
 
-    public void Hit()
-    {
+    public void Hit(){
         Destroy(gameObject);
     }
 }
